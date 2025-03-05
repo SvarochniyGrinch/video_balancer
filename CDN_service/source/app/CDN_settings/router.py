@@ -4,7 +4,7 @@ from shared.schemas.CDN import *
 from fastapi import APIRouter, Depends, status
 
 
-router = APIRouter(tags=["CDN",],)
+router = APIRouter(tags=["CDN",], prefix=PREFIX)
 
 
 @router.put(

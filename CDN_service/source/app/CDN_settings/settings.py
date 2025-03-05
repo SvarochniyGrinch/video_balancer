@@ -1,4 +1,4 @@
-PREFIX = "/CDN"
+PREFIX = "/settings"
 
 
 class Paths:

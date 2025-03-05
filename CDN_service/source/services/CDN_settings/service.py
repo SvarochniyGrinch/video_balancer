@@ -64,7 +64,7 @@ class CDNSettingsService:
         video_path = self._get_video_path(url)
         host = self._get_host(url)
         bucket_name = self._get_bucket_name(host)
-        url = f"https://{config.host}/{bucket_name}/{video_path}"
+        url = f"https://{config.cdn_host}/{bucket_name}/{video_path}"
         return url
 
     async def get_redirect(self, url: str):
@@ -73,7 +73,7 @@ class CDNSettingsService:
 
         COUNTER+= 1
 
-        if config.redirect_each_n_requests <= 0 or COUNTER % config.redirect_each_n_requests == 0:
+        if config.period <= 0 or COUNTER % config.period == 0:
             COUNTER = 0
             return url
-        return await self.redirect_in_cdn(url)
+        return await self._redirect_in_cdn(url)
