@@ -54,15 +54,15 @@ async def update(
     return await service.update(params, body)
 
 
-@router.get(
-    path=Paths.List,
-    status_code=status.HTTP_200_OK,
-    responses={
-        status.HTTP_200_OK: {"model": responses.Read},
-    },
-)
-async def list(
-    params: params.List = Depends(),
-    service: CDNSettingsService = Depends(),
-):
-    return await service.list(params)
+# @router.get(
+#     path=Paths.List,
+#     status_code=status.HTTP_200_OK,
+#     responses={
+#         status.HTTP_200_OK: {"model": responses.Read},
+#     },
+# )
+# async def list(
+#     params: params.List = Depends(),
+#     service: CDNSettingsService = Depends(),
+# ):
+#     return await service.list(params)

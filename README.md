@@ -1,1 +1,3 @@
 # video_balancer
+
+to run: ```docker-compose -f 'docker-compose.yml' up -d --build```
