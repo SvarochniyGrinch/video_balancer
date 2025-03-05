@@ -1,0 +1,52 @@
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: 1
+
+x-service-defaults: &service-defaults
+  <<: *logging
+  stop_grace_period: 1s
+  entrypoint:
+    - /project/entrypoint.sh
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+
+services:
+  cdn_service:
+    build:
+      context: ./CDN_service
+      dockerfile: Dockerfile
+    volumes:
+      - ./CDN_service:/project
+      - ./shared:/libs/shared
+    env_file:
+      - ".env"
+    ports:
+      - ${PAYMENTS_SERVICE_PORT}:8000
+    depends_on:
+      - postgresql_migrator
+    <<: *service-defaults
+  
+  postgresql_migrator:
+    build: ./postgresql_migrator
+    volumes:
+      - ./postgresql_migrator:/project
+      - ./shared:/libs/shared
+    env_file:
+      - ".env"
+    depends_on:
+      - postgresql
+    command: ["bash", "/project/entrypoint.sh"]
+    <<: *logging
+
+  postgresql:
+    image: postgres:16.4-bookworm
+    restart: always
+    env_file:
+      - ".env"
+    volumes:
+      - ".docker-volumes/postgresql:/var/lib/postgresql/data"
+    <<: *logging
