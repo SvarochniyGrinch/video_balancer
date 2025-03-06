@@ -3,6 +3,6 @@ PREFIX = "/settings"
 
 class Paths:
     Create = ""
-    Read = "/{id}"
-    Update = "/{id}"
+    Read = ""
+    Update = ""
     List = ""

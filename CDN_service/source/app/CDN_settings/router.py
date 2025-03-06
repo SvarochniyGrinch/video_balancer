@@ -7,19 +7,19 @@ from fastapi import APIRouter, Depends, status
 router = APIRouter(tags=["CDN",], prefix=PREFIX)
 
 
-@router.put(
-    path=Paths.Create,
-    status_code=status.HTTP_201_CREATED,
-    responses={
-        status.HTTP_201_CREATED: {"model": responses.Create},
-        status.HTTP_400_BAD_REQUEST: {},
-    },
-)
-async def create(
-    body: bodies.Create,
-    service: CDNSettingsService = Depends(),
-):
-    return await service.create(body)
+# @router.put(
+#     path=Paths.Create,
+#     status_code=status.HTTP_201_CREATED,
+#     responses={
+#         status.HTTP_201_CREATED: {"model": responses.Create},
+#         status.HTTP_400_BAD_REQUEST: {},
+#     },
+# )
+# async def create(
+#     body: bodies.Create,
+#     service: CDNSettingsService = Depends(),
+# ):
+#     return await service.create(body)
 
 
 @router.get(

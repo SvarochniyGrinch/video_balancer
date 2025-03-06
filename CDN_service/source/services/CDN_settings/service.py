@@ -23,20 +23,29 @@ class CDNSettingsService:
         return responses.Create(item=CDNsettings.model_validate(obj, from_attributes=True))
 
     async def read(self, params: params.Read) -> responses.Read:
-        obj = await self._get_object(params.id)
+        obj = await self._get_object(1)
         return responses.Read(item=CDNsettings.model_validate(obj, from_attributes=True))
 
     async def _get_object(self, id: int) -> "CDNModel":
         obj = await self.repo.get(id=id)
         if obj is None:
-            raise HTTPException(status.HTTP_404_NOT_FOUND, "Setting not found")  # noqa
+            return None
+            # raise HTTPException(status.HTTP_404_NOT_FOUND, "Setting not found")  # noqa
         return obj
 
     async def update(self, params: params.Update, body: bodies.Update) -> responses.Update:
-        obj = await self._get_object(params.id)
-        obj = await self.repo.update(obj, **body.model_dump(exclude_none=True),)
+        obj = await self._get_object(1)
         if obj is None:
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, "Some conflicts caused")  # noqa
+            new_data = body.model_dump(exclude_none=True, exclude={'id'})
+            new_data['id'] = 1  # Фиксируем id=1
+            new_obj = await self.repo.new(**new_data,)
+            obj = await self.repo.create(new_obj)
+            if obj is None:
+                raise HTTPException(status.HTTP_400_BAD_REQUEST, "Failed to create CDN settings")
+        else:
+            obj = await self.repo.update(obj, **body.model_dump(exclude_none=True),)
+            if obj is None:
+                raise HTTPException(status.HTTP_400_BAD_REQUEST, "Some conflicts caused")  # noqa
         return responses.Update(item=CDNsettings.model_validate(obj, from_attributes=True))
 
     async def list(self, params: params.List) -> responses.List:
@@ -77,3 +86,5 @@ class CDNSettingsService:
             COUNTER = 0
             return url
         return await self._redirect_in_cdn(url)
+    
+    # http://localhost:8000/?video=http://s1.origin-cluster/video/1488/xcg2djHckad.m3u8

@@ -3,11 +3,13 @@ from fastapi import Depends, Path
 
 
 class Read(CamelModel):
-    id: int = Path()
+    ...
+    # id: int = Path()
 
 
 class Update(CamelModel):
-    id: int = Path()
+    ...
+    # id: int = Path()
 
 
 class List(ListParams):
